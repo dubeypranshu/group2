@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BKL: Barely Keeping Life</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        
+        :root {
+            --hacker-green: lime;
+            --glow: 0 0 10px lime;
+        }
+        
+        body {
+            background: #000 url('https://i.gifer.com/2unv.gif') fixed;
+            color: var(--hacker-green);
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            padding: 0;
+            text-shadow: var(--glow);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+            25% { text-shadow: -2px 0 red, 2px 0 cyan; }
+            50% { text-shadow: 2px 0 red, -2px 0 cyan; }
+            75% { text-shadow: -2px 0 red, 2px 0 cyan; }
+            100% { text-shadow: 2px 0 red, -2px 0 cyan; }
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            text-align: center;
+            z-index: 1000;
+            border-bottom: 1px solid var(--hacker-green);
+        }
+        
+        .navbar a {
+            color: var(--hacker-green);
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 15px;
+            transition: 0.3s;
+            font-size: 12px;
+            position: relative;
+        }
+        
+        .navbar a:hover {
+            background: var(--hacker-green);
+            color: black;
+        }
+        
+        .navbar a.active {
+            background: var(--hacker-green);
+            color: black;
+            box-shadow: var(--glow);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 0;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 0;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 50px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--hacker-green);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--hacker-green);
+            box-shadow: var(--glow);
+            position: relative;
+        }
+        
+        .members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .member-card {
+            width: 250px;
+            height: 350px;
+            perspective: 1000px;
+        }
+        
+        .member-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .member-card:hover .member-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .member-front, .member-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border: 2px solid var(--hacker-green);
+            box-shadow: var(--glow);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .member-front {
+            background: rgba(0, 0, 0, 0.9);
+        }
+        
+        .member-back {
+            background: black;
+            color: var(--hacker-green);
+            transform: rotateY(180deg);
+            overflow-y: auto;
+        }
+        
+        .member-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--hacker-green);
+            margin-bottom: 20px;
+        }
+        
+        .member-name {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .member-role {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .member-bio {
+            font-size: 0.7rem;
+            margin-top: 15px;
+        }
+        
+        .inside-jokes {
+            margin: 60px 0;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--hacker-green);
+            box-shadow: var(--glow);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 60px;
+            border-top: 1px solid var(--hacker-green);
+            font-size: 0.8rem;
+        }
+        
+        .typing {
+            border-right: 3px solid var(--hacker-green);
+            animation: blink 0.75s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--hacker-green); }
+        }
+        
+        /* Matrix rain effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+
+    
+    <div class="container">
+        <header id="home">
+            <h1 class="glitch">BKL: <span class="typing">Barely Keeping Life</span></h1>
+            <p class="tagline">From study group to chaotic survival squad</p>
+        </header>
+        
+        <section id="history">
+            <h2>Our Downhill Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2023 - The Beginning</h3>
+                        <p>At starting 10-15 students helping each other with notes and assignments. The golden era of productivity in group.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Mid 2023 - The Great Split</h3>
+                        <p>Members dropped to 8-9. People began forming their own groups. The first signs of chaos emerged.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>Late 2023 - The Rebranding</h3>
+                        <p>Officially became BKL: Barely Keeping Life. frountbanch -------> backbanch to backchodi, masti, and endless randirona.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h3>2024 - The Final Six</h3>
+                        <p>The squad solidified: 6 members united by chaos, each bringing unique (questionable) skills to the group.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="members">
+            <h2>The Chaotic Core</h2>
+            <div class="members">
+                <!-- Member 1 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="ayushh.jpg" alt="Member 1" class="member-img">
+                            <h3 class="member-name">The  avoidance</h3>
+                            <p class="member-role">Expert in last-minute miracles</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Can finish 1-week assignment in 3 hours. Master of "aaj kare soo, kal kara, kal kare soo parso".</p>
+                            <h3>Weakness:</h3>
+                            <p>Actual deadlines (they're merely suggestions)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member 2 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="pranshuu.jpg" alt="Member 2" class="member-img">
+                            <h3 class="member-name">The Meme Lord</h3>
+                            <p class="member-role">Chief Entertainment Officer</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Finds relatable memes for every situation. Can turn any serious moment into comedy.</p>
+                            <h3>Weakness:</h3>
+                            <p>Actually studying instead of making memes about not studying</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member 3 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="shivamm.jpg" alt="Member 3" class="member-img">
+                            <h3 class="member-name">The Ghost</h3>
+                            <p class="member-role">Master of Disappearance</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Can vanish during exam prep. Reappears only when notes are complete.</p>
+                            <h3>Weakness:</h3>
+                            <p>Actually showing up when needed</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member 4 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="harshh.jpg" alt="Member 4" class="member-img">
+                            <h3 class="member-name">The Overthinker</h3>
+                            <p class="member-role">Professional Crisis Creator</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Can imagine worst-case scenarios for simplest tasks. Turns "submit assignment" into existential crisis.</p>
+                            <h3>Weakness:</h3>
+                            <p>Basic life decisions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member 5 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="pranall.jpg" alt="Member 5" class="member-img">
+                            <h3 class="member-name">The Parent</h3>
+                            <p class="member-role">Group's Responsible Adult</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Reminds everyone about deadlines. Actually reads syllabus. Brings snacks.</p>
+                            <h3>Weakness:</h3>
+                            <p>Carrying the mental load of 5 other people</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member 6 -->
+                <div class="member-card">
+                    <div class="member-inner">
+                        <div class="member-front">
+                            <img src="malharr.jpg" alt="Member 6" class="member-img">
+                            <h3 class="member-name">The Wildcard</h3>
+                            <p class="member-role">Unpredictable Element</p>
+                        </div>
+                        <div class="member-back">
+                            <h3>Special Skills:</h3>
+                            <p>Randomly disappears for days. Returns with bizarre stories. Somehow passes everything.</p>
+                            <h3>Weakness:</h3>
+                            <p>Basic human routine</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="jokes" class="inside-jokes">
+            <h2>Inside Jokes That Keep Us Going</h2>
+            <ul>
+                <li>"Remember that time we actually studied? Me neither."</li>
+                <li>"We'll start at 5" (never starts before 7)</li>
+                <li>The legendary "one last meme" before study that lasts 3 hours</li>
+                <li>"I'll just quickly check my phone" → 2am Wikipedia rabbit hole</li>
+                <li>The shared Google Doc that's 90% nonsense, 10% actual notes</li>
+                <li>"This exam will be easy" → *collective failure*</li>
+            </ul>
+        </section>
+        
+        <section id="future">
+            <h2>How Long Will This Last?</h2>
+            <p>Honestly? No one knows. We're just here for the ride, the memes, and the occasional academic crisis.</p>
+            <p>Current survival rate: <span id="survivalCounter">0</span> days and counting...</p>
+        </section>
+    </div>
+    
+    <footer>
+        BKL: Barely Keeping Life © 2024 | Not responsible for any academic failures caused by excessive meme sharing | Pranshu dubey |
+    </footer>
+    
+    <script>
+        // Matrix rain effect
+        const matrixRain = document.getElementById('matrixRain');
+        const canvas = document.createElement('canvas');
+        matrixRain.appendChild(canvas);
+        
+        canvas.style.display = 'block';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const ctx = canvas.getContext('2d');
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0F0';
+            ctx.font = fontSize + 'px monospace';
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(draw, 30);
+        
+        // Survival counter
+        const startDate = new Date('2023-01-01');
+        const counter = document.getElementById('survivalCounter');
+        
+        function updateCounter() {
+            const today = new Date();
+            const diffTime = Math.abs(today - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            counter.textContent = diffDays;
+        }
+        
+        updateCounter();
+        setInterval(updateCounter, 86400000); // Update daily
+        
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Update active nav link
+                document.querySelectorAll('.navbar a').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+        
+        // Typing effect
+        const typingElement = document.querySelector('.typing');
+        const text = "Barely Keeping Life";
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                typingElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, Math.random() * 200 + 50);
+            } else {
+                setTimeout(() => {
+                    typingElement.textContent = '';
+                    i = 0;
+                    typeWriter();
+                }, 3000);
+            }
+        }
+        
+        typeWriter();
+    </script>
+</body>
+</html>
